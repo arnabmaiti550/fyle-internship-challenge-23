@@ -1,5 +1,91 @@
-<div class="grid h-screen place-items-center">
-  <div class="font-bold text-3xl">
-    Fyle Internship Challenge
+<div class="bg-zinc-500 bg-gradient-to-tr from-indigo-900">
+  <nav class="py-4 content px-4 font-bold text-xl bg-white text-blue-900 shadow-lg ">
+    <span> {{title}} app is running!</span>
+  </nav>
+  <section class="h-40 flex items-center capitalize justify-center flex-col space-y-2">
+    <div class="text-white font-medium text-xl tracking-wide">Github profile search</div>
+    <form class="w-full sm:w-2/3 lg:w-2/5 px-6" (ngSubmit)="formSubmit()">
+      <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+      <div class="relative w-full">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <mat-icon class="text-blue-500">search</mat-icon>
+        </div>
+        <input type="search" name="username" [(ngModel)]="searchText" id="default-search"
+          class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 border-transparent focus:border-transparent focus:ring-0"
+          placeholder="Search by username" required />
+        <button type="submit"
+          class="text-white absolute end-1.5 bottom-1.5 bg-blue-900 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 ">Search</button>
+      </div>
+    </form>
+  </section>
+</div>
+<div class="container  mt-4 mx-auto flex flex-col space-y-6 md:flex-row md:space-x-6 md:space-y-0"
+  *ngIf="userName&& (isUserDataLoading||currentUserData?.login)">
+
+  <div *ngIf="!isUserDataLoading; else userLoading"
+    class="w-full md:w-1/3 xs:min-h-[50vh] sm:min-h-80 max-h-[350px] bg-gray-100 text-center flex flex-col sm:flex-row md:flex-col space-y-2 sm:space-y-0 sm:space-x-12 p-6 items-center">
+    <div class="flex flex-col space-y-2 ">
+      <img class="h-40 w-40 mx-auto  outline-dashed outline-offset-2 outline-gray-400 rounded-full"
+        [src]="currentUserData?.avatar_url||''">
+
+      <a [href]="currentUserData.html_url||''"><mat-icon
+          class="inline-block pt-2 mr-2">link</mat-icon>{{currentUserData.html_url}}</a>
+    </div>
+    <div class="text-center sm:text-left">
+      <span class="text-xl font-semibold block username">{{currentUserData.name}}</span>
+      <span class="text-md font-light block">{{currentUserData.bio||'---'}}</span>
+      <span class="text-md mt-1 font-normal block overflow-visible">
+        <span class="material-symbols-outlined text-[16px]">
+          location_on
+        </span>
+        {{currentUserData.location||'---'}}</span>
+      <span class="text-md mt-1 font-normal block">Twitter: @{{currentUserData.twitter_username||'---'}}</span>
+
+    </div>
   </div>
+  <ng-template #userLoading>
+    <div
+      class="w-full xs:min-h-[50vh] sm:min-h-80 bg-white text-center flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-12 p-6 items-center">
+      <ngx-skeleton-loader appearance="circle" [theme]="{ width: '10rem', height: '10rem' }" />
+      <ngx-skeleton-loader [theme]="{ width: '80%', height: '15rem' }" />
+    </div>
+  </ng-template>
+  <div *ngIf="!isUserDataLoading&&!isRepositoryDataLoading;else repoLoading"
+    class=" bg-gray-100 md:w-3/4 mt-4 md:mt-0 p-4 mb-8">
+    <h2>Public Repositories</h2>
+    <div class="w-full min-h-80  grid grid-cols-1  sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4 ">
+      <div class="min-h-40 bg-gray-100 rounded-sm border-2 p-4 border-blue-800"
+        *ngFor="let repo of currentRepositoryData">
+        <span class="text-lg font-semibold text-blue-500 truncate h-6 block">{{repo.name}}</span>
+        <span class="text-md mt-1 font-light block truncate h-6">{{repo.description||'---'}}</span>
+        <div class="flex space-x-2 mt-4 overflow-x-scroll" *ngIf="repo.topics.length; else showLanguage">
+          <div class=" bg-zinc-700 text-white py-2 px-3" *ngFor="let topic of repo.topics">{{topic}}</div>
+        </div>
+        <ng-template #showLanguage>
+          <div class="flex space-x-2 mt-4">
+            <div class=" bg-zinc-700 text-white py-2 px-3">{{repo.language||'--'}}</div>
+          </div>
+        </ng-template>
+      </div>
+
+    </div>
+    <div *ngIf="!currentUserData.public_repos">
+      No Repositories available.
+    </div>
+    <mat-paginator [length]="currentUserData.public_repos" [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]" (page)="pageEvent = handlePage($event)">
+    </mat-paginator>
+  </div>
+  <ng-template #repoLoading>
+    <div class=" bg-white w-full min-h-80  grid grid-cols-2 gap-4 ">
+      <ngx-skeleton-loader [theme]="{ width: '100%', height: '8rem' }" *ngFor="let i of [0,1,2,3,4,5,6,7,8,9]" />
+    </div>
+  </ng-template>
+</div>
+<div class="container mt-4 h-[60vh] mx-auto flex items-center justify-center text-2xl text-gray-600" *ngIf="!userName">
+  Search something to continue.
+</div>
+<div class="container mt-4 h-[60vh] mx-auto flex items-center justify-center text-2xl text-gray-600"
+  *ngIf="userName&&!isUserDataLoading&& !currentUserData.login">
+  Repository not found.
 </div>
