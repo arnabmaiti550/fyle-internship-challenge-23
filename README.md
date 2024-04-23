@@ -12,7 +12,8 @@ __Note__ - This challenge is in angular. We work on angular frameworks & after y
 
 ## About
 
-Submitted by Arnab Maiti
+Submitted by Arnab Maiti. 
+Using [Angular Material](https://material.angular.io/) library in this challenge.
 
 ## Installation
 
