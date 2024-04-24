@@ -23,7 +23,7 @@
   *ngIf="userName&& (isUserDataLoading||currentUserData?.login)">
 
   <div *ngIf="!isUserDataLoading; else userLoading"
-    class="w-full md:w-1/3 xs:min-h-[50vh] sm:min-h-80 max-h-[350px] bg-gray-100 text-center flex flex-col sm:flex-row md:flex-col space-y-2 sm:space-y-0 sm:space-x-12 p-6 items-center">
+    class="w-full md:w-1/3 xs:min-h-[50vh] sm:min-h-80 max-h-[350px] bg-gray-100 text-center flex flex-col sm:flex-row md:flex-col space-y-2 sm:space-y-0 md:space-y-2 sm:space-x-12 md:space-x-0 p-6 items-center">
     <div class="flex flex-col space-y-2 ">
       <img class="h-40 w-40 mx-auto  outline-dashed outline-offset-2 outline-gray-400 rounded-full"
         [src]="currentUserData?.avatar_url||''">
@@ -31,7 +31,7 @@
       <a [href]="currentUserData.html_url||''"><mat-icon
           class="inline-block pt-2 mr-2">link</mat-icon>{{currentUserData.html_url}}</a>
     </div>
-    <div class="text-center sm:text-left">
+    <div class="text-center sm:text-left md:text-center">
       <span class="text-xl font-semibold block username">{{currentUserData.name}}</span>
       <span class="text-md font-light block">{{currentUserData.bio||'---'}}</span>
       <span class="text-md mt-1 font-normal block overflow-visible">
@@ -87,5 +87,5 @@
 </div>
 <div class="container mt-4 h-[60vh] mx-auto flex items-center justify-center text-2xl text-gray-600"
   *ngIf="userName&&!isUserDataLoading&& !currentUserData.login">
-  Repository not found.
+  User not found.
 </div>
